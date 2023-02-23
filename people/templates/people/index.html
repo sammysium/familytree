@@ -1,0 +1,35 @@
+{% extends "people/base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block title %}Family Tree - Overview{% endblock %}
+{% block head %}
+  {% include 'people/fragments/mapresources.html' with clustering=True fullscreen=True %}
+  <script src="{% static 'people/js/jquery.tagcloud.js' %}"></script>
+  <style>
+    .tab-pane tbody>tr:first-child>td {border-top: 0;}
+    #map {height: 400px;}
+    .marker-simple div {background-color: #325d88; opacity: 0.84; color: #fff; width: 24px; height: 24px; margin: 12px 0 0 12px;}
+    .marker-simple small {line-height: 24px;}
+    a sup {display: inline-block; text-decoration: none;}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <br/>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel-group">
+        {% include 'people/fragments/clouds.html' %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Map of Birthplaces</h3>
+          </div>
+          {% include 'people/fragments/map.html' with zoom=6 %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      {% include 'people/fragments/accordion.html' %}
+    </div>
+  </div>
+{% endblock %}

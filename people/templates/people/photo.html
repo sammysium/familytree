@@ -1,0 +1,63 @@
+{% extends "people/base.html" %}
+{% load static %}
+{% block title %}Add Photographs : {{ form.instance.name }} {% endblock %}
+{% block head %}
+  {{ form.media }}
+  <script src="{% static 'people/js/dropzone/dropzone.min.js' %}"></script>
+  <link href="{% static 'people/js/dropzone/dropzone.min.css' %}" rel="stylesheet" />
+
+  <script>Dropzone.autoDiscover = false;</script>
+
+{% endblock %}
+
+{% block content %}
+  
+  <h1 class="page-header">{% block heading %}Add Photos : {{ name }} {% endblock %}</h1>
+  <div class="row">
+    <div class="col-md-12">
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}
+            {{ error }}<br/>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <form method="POST" role="form" id="uploadpics" class="dropzone" enctype="multipart/form-data" action="{% url 'photo' person_id %}">
+        {% csrf_token %}
+
+      
+      </form>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function(){
+      var myDropzone = new Dropzone("form#uploadpics",
+         { 
+
+          
+          paramName: "image", // The name that will be used to transfer the file
+          maxFilesize: 0.25, // MB or 250kb
+          maxFiles:5,
+          acceptedFiles:'image/png,image/jpg,image/jpeg',
+          addRemoveLinks: true,
+          parallelUploads:1,
+          
+
+         }
+
+
+ );
+
+      myDropzone.on("queuecomplete", function (file) {
+          alert('Pictures have been uploaded');
+         
+          this.removeAllFiles();
+      });
+
+
+
+
+     
+    });
+  </script>
+{% endblock %}

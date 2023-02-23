@@ -1,0 +1,69 @@
+{% extends "people/base.html" %}
+{% load static %}
+{% block title %}{{ person.name }}{% endblock %}
+{% block head %}
+  <style>
+    .divorced {text-decoration: line-through;}
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <img src="{{ MEDIA_URL }}{{person.avatar}}" class="person_avatar">
+  <h1 class="page-header">
+    {{ person.name }}
+    {% if relationship %}
+      <small>{{ relationship }}</small>
+    {% elif person == user.person %}
+      <small>You</small>
+    {% endif %}
+    {% if user.is_staff %}
+      <a href="{% url 'edit_person' person.id %}" class="pull-right btn btn-default" title="Edit">
+        <span class="glyphicon glyphicon-pencil"></span>
+      </a>
+
+
+      <a href="{% url 'photo' person.id %}" class="pull-right btn btn-default" title="Add Photos">
+        <span class="glyphicon glyphicon-user"></span>
+      </a>
+
+    {% endif %}
+  </h1>
+  <div class="row" style="margin-top: -10px; margin-bottom: 20px;">
+    <div class="col-md-6 col-sm-12">
+      {% if person.date_of_birth %}
+        <p class="pull-left">
+          <span class="text-primary">Born:</span> {{ person.date_of_birth.year }}
+          {% if person.deceased and person.date_of_death %}
+            <span class="text-muted" style="margin: 0 5px;">&middot;</span>
+            <span class="text-primary">Died:</span> {{ person.date_of_death.year }}
+          {% endif %}
+          {% if person.age %}
+            <span class="text-muted" style="margin: 0 5px;">&middot;</span>
+            <span class="text-primary">Age:</span> {{ person.age }} year{{ person.age|pluralize }}
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
+    <div class="col-md-6 col-sm-12 text-right">
+      {% for tag in person.tags.all %}
+        <a href="{% url 'tag' tag.slug %}" class="label label-primary">{{ tag.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      {% if person.timeline|length > 0 %}
+        {% include 'people/fragments/timeline.html' %}
+      {% endif %}
+      <h4>Notes</h4>
+      {{ person.notes|safe }}
+      {% include 'people/fragments/photos.html' %}
+      {% include 'people/fragments/documents.html' %}
+    </div>
+    <div class="col-md-4">
+      {% include 'people/fragments/family.html' %}
+    </div>
+  </div>
+{% endblock %}
+

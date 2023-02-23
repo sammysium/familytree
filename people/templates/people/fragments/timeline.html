@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+  <table class="table table-condensed">
+    {% for event in person.timeline %}
+      <tr>
+        <td class="text-right text-primary small col-md-3 col-sm-4">{{ event.date }}</td>
+        <td class="col-md-10 col-sm-8">
+          {% if event.reference %}
+            <a href="{{ event.reference }}" target="_blank" class="pull-right">
+              <span class="glyphicon glyphicon-new-window"></span>
+            </a>
+          {% endif %}
+          {{ event.verb|title }}
+          {% if event.event_type == 2 %}
+            {% if person == event.husband %}
+              <a href="{% url 'person' event.wife.id %}">{{ event.wife.birth_name }}</a>
+            {% else %}
+              <a href="{% url 'person' event.husband.id %}">{{ event.husband.birth_name }}</a>
+            {% endif %}
+          {% endif %}
+          {% if event.location %}
+            in {% include 'people/fragments/location.html' with location=event.location %}
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+

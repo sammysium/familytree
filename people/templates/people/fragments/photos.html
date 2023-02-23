@@ -1,0 +1,18 @@
+{% load thumbnail %}
+{% if person.photos.count > 0 %}
+  <br />
+  {% for photo in person.photos.all %}
+    {% if forloop.counter0|divisibleby:"4" %}<div class="row">{% endif %}
+      <div class="col-md-3">
+        <a href="{{ MEDIA_URL }}{{ photo.image }}" class="thumbnail">
+          <img src="{% thumbnail photo.image 155x155 crop="scale" %}" alt="Thumbnail" />
+          <div class="caption text-center small">
+            {{ photo.caption }}<br/>
+            <em class="text-muted">{{ photo.date|date:"F Y" }}</em>
+          </div>
+        </a>
+      </div>
+    {% if forloop.counter|divisibleby:"4" or forloop.last %}</div>{% endif %}
+  {% endfor %}
+{% endif %}
+
